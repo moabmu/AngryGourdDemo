@@ -1,20 +1,25 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Input;
 namespace AngryGourdDemo
 {
     /// <summary>
-    /// This is the main type for your game.
+    /// This is a simple game called AngryGroud.
+    /// The code is attached to a workshop about MonoGame for absolute beginners.
+    /// The game is not completeو and the code is written in such a manner to be appropriate for beginners.
     /// </summary>
     public class AngryGourdGame : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Texture2D _background, _gourd, _hero;
         public AngryGourdGame()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+            this.Content.RootDirectory = "Content";
+            graphics.IsFullScreen = true;
         }
 
         /// <summary>
@@ -40,6 +45,9 @@ namespace AngryGourdDemo
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             // TODO: use this.Content to load your game content here
+            _background = this.Content.Load<Texture2D>("Backgrounds/Background1");
+            _gourd = this.Content.Load<Texture2D>("Sprites/Gourd");
+            _hero = this.Content.Load<Texture2D>("Sprites/Hero_Idle");
         }
 
         /// <summary>
@@ -60,6 +68,10 @@ namespace AngryGourdDemo
         {
             // TODO: Add your update logic here
 
+            // Allows the game to exit
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+                this.Exit();
+
             base.Update(gameTime);
         }
 
@@ -69,9 +81,17 @@ namespace AngryGourdDemo
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
 
- 
+            // Let's suppose our screen size is 800 * 480, later on we will handle it to work with any screen size
+            spriteBatch.Begin();
+            // TODO: Add your drawing code here
+            spriteBatch.Draw(_background, new Vector2(0, 0), Color.White);
+            spriteBatch.Draw(_gourd, new Vector2(15, 25), Color.White);
+            spriteBatch.Draw(_hero, new Vector2(25, 384), Color.White);
+
+            spriteBatch.End();
+
             base.Draw(gameTime);
         }
     }

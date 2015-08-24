@@ -54,12 +54,6 @@
 /processorParam:Quality=Best
 /build:Sounds/Hero_Killed.wav
 
-#begin Sounds/Music.wma
-/importer:WmaImporter
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:Sounds/Music.wma
-
 #begin Sprites/Explosion_Spritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor

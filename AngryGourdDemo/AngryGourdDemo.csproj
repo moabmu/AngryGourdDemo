@@ -114,7 +114,6 @@
     <Content Include="Content\Sounds\Explosion.wav" />
     <Content Include="Content\Sounds\Gourd_Angry.wav" />
     <Content Include="Content\Sounds\Hero_Killed.wav" />
-    <Content Include="Content\Sounds\Music.wma" />
     <Content Include="Content\Sprites\Explosion_Spritesheet.png" />
     <Content Include="Content\Sprites\Gourd.png" />
     <Content Include="Content\Sprites\Health_Icon.png" />
