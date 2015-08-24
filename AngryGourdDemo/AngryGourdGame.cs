@@ -14,7 +14,8 @@ namespace AngryGourdDemo
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Texture2D _background, _gourd, _hero;
+        GSprite _background, _gourd, _hero;
+        RenderContainer _renderContainer;
         public AngryGourdGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -31,6 +32,11 @@ namespace AngryGourdDemo
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            _background = new GSprite("Backgrounds/Background1") { Position = new Vector2(0,0) };
+            _gourd = new GSprite("Sprites/Gourd") { Position = new Vector2(15 , 25) };
+            _hero = new GSprite("Sprites/Hero_Idle") { Position = new Vector2(25, 384) }; 
+
+            _renderContainer = new RenderContainer();
 
             graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
             base.Initialize();
@@ -45,9 +51,12 @@ namespace AngryGourdDemo
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             // TODO: use this.Content to load your game content here
-            _background = this.Content.Load<Texture2D>("Backgrounds/Background1");
-            _gourd = this.Content.Load<Texture2D>("Sprites/Gourd");
-            _hero = this.Content.Load<Texture2D>("Sprites/Hero_Idle");
+            _renderContainer.SpriteBatch = spriteBatch;
+            _renderContainer.GraphicsDevice = graphics.GraphicsDevice;
+
+            _background.LoadContent(this.Content);
+            _gourd.LoadContent(this.Content);
+            _hero.LoadContent(this.Content);
         }
 
         /// <summary>
@@ -72,6 +81,10 @@ namespace AngryGourdDemo
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
+            _renderContainer.GameTime = gameTime;
+            _gourd.Update(_renderContainer);
+            _hero.Update(_renderContainer);
+
             base.Update(gameTime);
         }
 
@@ -83,13 +96,13 @@ namespace AngryGourdDemo
         {
             GraphicsDevice.Clear(Color.White);
 
-            // Let's suppose our screen size is 800 * 480, later on we will handle it to work with any screen size
+            // Let's suppose our screen size is a fixed size 800 * 480, later on we will handle it to work with any screen size
             spriteBatch.Begin();
             // TODO: Add your drawing code here
-            spriteBatch.Draw(_background, new Vector2(0, 0), Color.White);
-            spriteBatch.Draw(_gourd, new Vector2(15, 25), Color.White);
-            spriteBatch.Draw(_hero, new Vector2(25, 384), Color.White);
-
+            _background.Draw(_renderContainer);
+            _gourd.Draw(_renderContainer);
+            _hero.Draw(_renderContainer);
+            
             spriteBatch.End();
 
             base.Draw(gameTime);
