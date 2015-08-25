@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Diagnostics;
+
 namespace AngryGourdDemo
 {
     /// <summary>
@@ -14,7 +17,8 @@ namespace AngryGourdDemo
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        GSprite _background, _gourd, _hero;
+        GSprite _background, _gourd;
+        Hero _hero;
         RenderContainer _renderContainer;
         public AngryGourdGame()
         {
@@ -34,8 +38,8 @@ namespace AngryGourdDemo
             // TODO: Add your initialization logic here
             _background = new GSprite("Backgrounds/Background1") { Position = new Vector2(0,0) };
             _gourd = new GSprite("Sprites/Gourd") { Position = new Vector2(15 , 25) };
-            _hero = new GSprite("Sprites/Hero_Idle") { Position = new Vector2(25, 384) }; 
-
+            _hero = new Hero();
+            _hero.Initialize();
             _renderContainer = new RenderContainer();
 
             graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
@@ -102,9 +106,8 @@ namespace AngryGourdDemo
             _background.Draw(_renderContainer);
             _gourd.Draw(_renderContainer);
             _hero.Draw(_renderContainer);
-            
             spriteBatch.End();
-
+            
             base.Draw(gameTime);
         }
     }
