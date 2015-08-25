@@ -92,6 +92,7 @@
     <Compile Include="GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GAnimatedSprite.cs" />
     <Compile Include="GObject2D.cs" />
     <Compile Include="GSprite.cs" />
     <Compile Include="Hero.cs" />

@@ -11,14 +11,16 @@ namespace AngryGourdDemo
 {
     public class Hero : GObject2D
     {
-        private GSprite _heroSprite;
-        private const int moveSpeed = 65;
+        private GAnimatedSprite _heroSprite;
+        private const int FrameWidth = 64;
+        private const int moveSpeed = 130;
         private sbyte _direction = 1;
 
         public override void Initialize()
         {
-            _heroSprite = new GSprite("Sprites/Hero_Idle");
+            _heroSprite = new GAnimatedSprite("Sprites/Hero_Run_Spritesheet", 10 , 75, new Point(FrameWidth,64));
             _heroSprite.Position = new Vector2(25, 384);
+            _heroSprite.PlayAnimation(true);
         }
 
         public override void LoadContent(ContentManager contentManager)
@@ -28,9 +30,11 @@ namespace AngryGourdDemo
 
         public override void Update(RenderContainer renderContainer)
         {
+            _heroSprite.Update(renderContainer);
+
             var pos = _heroSprite.Position;
 
-            if(pos.X >= renderContainer.GraphicsDevice.Viewport.Width - _heroSprite.Width && _direction != -1)
+            if(pos.X >= renderContainer.GraphicsDevice.Viewport.Width - FrameWidth && _direction != -1)
             {
                 _direction = -1;
                 _heroSprite.Effect = Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally;
