@@ -53,8 +53,11 @@ namespace AngryGourdDemo
             DrawRectangle = _frameRectangle;
         }
 
+        /// <summary>
+        /// Constructor for spritesheet with one row only
+        /// </summary>
         public GAnimatedSprite(string contentFilepath, int numFrames, int frameInterval,
-            Point frameSize): this(contentFilepath, numFrames, frameInterval, frameSize, numFrames)
+            Point frameSize, GSprite idleFrame = null) : this(contentFilepath, numFrames, frameInterval, frameSize, numFrames)
         { }
 
         public void PlayAnimation(bool loop = true)
@@ -104,9 +107,9 @@ namespace AngryGourdDemo
                         CurrentFrame = 0;
                         IsPlaying = IsLooping;
                     }
-
                 }
             }
+            base.Update(renderContainer);
         }
 
     }

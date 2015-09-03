@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics;
+using Microsoft.Xna.Framework.Input.Touch;
+using Windows.Devices.Sensors;
 
 namespace AngryGourdDemo
 {
@@ -36,14 +38,40 @@ namespace AngryGourdDemo
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            _renderContainer = new RenderContainer();
+
             _background = new GSprite("Backgrounds/Background1") { Position = new Vector2(0,0) };
             _gourd = new GSprite("Sprites/Gourd") { Position = new Vector2(15 , 25) };
             _hero = new Hero();
             _hero.Initialize();
-            _renderContainer = new RenderContainer();
+
+            //var _accelerometer = Accelerometer.GetDefault();
+            //if(_accelerometer != null)
+            //{
+            //    _accelerometer.ReportInterval = _accelerometer.MinimumReportInterval;
+            //    _accelerometer.ReadingChanged += _accelerometer_ReadingChanged;
+            //}
+
+            var _accelerometer = Accelerometer.GetDefault();
+            if (_accelerometer != null)
+            {
+                _accelerometer.ReportInterval = _accelerometer.MinimumReportInterval;
+                _accelerometer.ReadingChanged += _accelerometer_ReadingChanged;
+            }
 
             graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
+
+            TouchPanel.EnabledGestures = GestureType.DoubleTap;
+
             base.Initialize();
+        }
+
+        private void _accelerometer_ReadingChanged(Accelerometer sender, AccelerometerReadingChangedEventArgs args)
+        {
+            _hero.MoveSpeedMultiplier = (float)args.Reading.AccelerationY;
+#if DEBUG
+            Debug.WriteLine(String.Format("_hero.MoveSpeedMultiplier = {0,5:0.00}", _hero.MoveSpeedMultiplier));
+#endif
         }
 
         /// <summary>
@@ -87,6 +115,16 @@ namespace AngryGourdDemo
 
             _renderContainer.GameTime = gameTime;
             _gourd.Update(_renderContainer);
+
+            while (TouchPanel.IsGestureAvailable)
+            {
+                GestureSample gs = TouchPanel.ReadGesture();
+                if(gs.GestureType == GestureType.DoubleTap)
+                {
+                    // flip hero direction
+                    _hero.FlipDirection();
+                }
+            }
             _hero.Update(_renderContainer);
 
             base.Update(gameTime);
