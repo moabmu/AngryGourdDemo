@@ -47,7 +47,7 @@ namespace AngryGourdDemo
             if (Direction == 1)
                 m = -m;
 
-            if(pos.X >= renderContainer.GraphicsDevice.Viewport.Width - FrameWidth && Direction != -1)
+            if (pos.X >= renderContainer.BaseScreenWidth - FrameWidth && Direction != -1) //if(pos.X >= renderContainer.GraphicsDevice.Viewport.Width - FrameWidth && Direction != -1)
             {
                 Direction = -1;
                 _heroSprite.Effect = SpriteEffects.FlipHorizontally;

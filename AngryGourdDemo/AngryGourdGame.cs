@@ -19,6 +19,9 @@ namespace AngryGourdDemo
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Vector2 baseScreenSize = new Vector2(800, 480);
+        private Matrix globalTransformation;
+
         GSprite _background, _gourd;
         Hero _hero;
         RenderContainer _renderContainer;
@@ -45,13 +48,6 @@ namespace AngryGourdDemo
             _hero = new Hero();
             _hero.Initialize();
 
-            //var _accelerometer = Accelerometer.GetDefault();
-            //if(_accelerometer != null)
-            //{
-            //    _accelerometer.ReportInterval = _accelerometer.MinimumReportInterval;
-            //    _accelerometer.ReadingChanged += _accelerometer_ReadingChanged;
-            //}
-
             var _accelerometer = Accelerometer.GetDefault();
             if (_accelerometer != null)
             {
@@ -70,7 +66,7 @@ namespace AngryGourdDemo
         {
             _hero.MoveSpeedMultiplier = (float)args.Reading.AccelerationY;
 #if DEBUG
-            Debug.WriteLine(String.Format("_hero.MoveSpeedMultiplier = {0,5:0.00}", _hero.MoveSpeedMultiplier));
+            //Debug.WriteLine(String.Format("_hero.MoveSpeedMultiplier = {0,5:0.00}", _hero.MoveSpeedMultiplier));
 #endif
         }
 
@@ -82,6 +78,7 @@ namespace AngryGourdDemo
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
             // TODO: use this.Content to load your game content here
             _renderContainer.SpriteBatch = spriteBatch;
             _renderContainer.GraphicsDevice = graphics.GraphicsDevice;
@@ -89,6 +86,15 @@ namespace AngryGourdDemo
             _background.LoadContent(this.Content);
             _gourd.LoadContent(this.Content);
             _hero.LoadContent(this.Content);
+
+            //Work out how much we need to scale our graphics to fill the screen
+            _renderContainer.ResetScaling(baseScreenSize, new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight)); // you also can use the second constructor overloading instead of the method ResetScaling
+            Vector3 screenScalingFactor = new Vector3(_renderContainer.HorScaling, _renderContainer.VerScaling, 1);
+            globalTransformation = Matrix.CreateScale(screenScalingFactor);
+            
+#if DEBUG
+            //Debug.WriteLine("RenderContainer: HorScaling = {0}, VerScaling = {1}", _renderContainer.HorScaling, _renderContainer.VerScaling);
+#endif
         }
 
         /// <summary>
@@ -116,6 +122,16 @@ namespace AngryGourdDemo
             _renderContainer.GameTime = gameTime;
             _gourd.Update(_renderContainer);
 
+#if DEBUG
+            #region You need to scale touch input to be read in terms of the base screen size ( in this game, it is 800 * 480)
+            //TouchCollection touches = TouchPanel.GetState();
+            //foreach (TouchLocation t in touches)
+            //{
+            //    Debug.WriteLine("(x, y) = ({0}, {1})", t.Position.X, t.Position.Y);
+            //}
+            #endregion
+#endif
+
             while (TouchPanel.IsGestureAvailable)
             {
                 GestureSample gs = TouchPanel.ReadGesture();
@@ -138,8 +154,10 @@ namespace AngryGourdDemo
         {
             GraphicsDevice.Clear(Color.White);
 
-            // Let's suppose our screen size is a fixed size 800 * 480, later on we will handle it to work with any screen size
-            spriteBatch.Begin();
+            //// Let's suppose our screen size is a fixed size 800 * 480, later on we will handle it to work with any screen size
+            //spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, globalTransformation);            
+
             // TODO: Add your drawing code here
             _background.Draw(_renderContainer);
             _gourd.Draw(_renderContainer);
