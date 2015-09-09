@@ -58,7 +58,7 @@ namespace AngryGourdDemo
                 _heroSprite.Effect = SpriteEffects.None;
             }
 
-            pos.X += (float)((moveSpeed + (moveSpeed * m)) * renderContainer.GameTime.ElapsedGameTime.TotalSeconds * Direction);
+            pos.X += (float)( (moveSpeed + (moveSpeed * m)) * renderContainer.GameTime.ElapsedGameTime.TotalSeconds * Direction);
             _heroSprite.Position = pos;
         }
 

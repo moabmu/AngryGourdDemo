@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace AngryGourdDemo
         public GraphicsDevice GraphicsDevice { get; set; }
         public SpriteBatch SpriteBatch { get; set; }
         public GameTime GameTime { get; set; }
+        public ContentManager ContentManager { get; set; }
         /// <summary>
         /// Get Screen height.
         /// </summary>

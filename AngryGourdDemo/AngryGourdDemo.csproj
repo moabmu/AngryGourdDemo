@@ -94,10 +94,12 @@
     </Compile>
     <Compile Include="GAnimatedSprite.cs" />
     <Compile Include="GObject2D.cs" />
+    <Compile Include="Gourd.cs" />
     <Compile Include="GSprite.cs" />
     <Compile Include="Hero.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RenderContainer.cs" />
+    <Compile Include="Rock.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
