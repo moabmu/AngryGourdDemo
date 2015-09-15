@@ -16,6 +16,9 @@ namespace AngryGourdDemo
 
         public bool CanDraw { get; set; }
 
+        private Rectangle? _relativeBoundingRectangle;
+        public Rectangle? BoundingRectangle { get; set; } //protected set; }
+
         public GObject2D() 
         {
             CanDraw = true;
@@ -26,7 +29,29 @@ namespace AngryGourdDemo
         /// </summary>
         public virtual void Initialize() { }
         public virtual void LoadContent(ContentManager contentManager) { }
-        public virtual void Update(RenderContainer renderContainer) { }
+        public virtual void Update(RenderContainer renderContainer)
+        {
+            if (_relativeBoundingRectangle.HasValue)
+                BoundingRectangle = _relativeBoundingRectangle.Value.Update(Position);
+        }
         public virtual void Draw(RenderContainer renderContainer) { }
+
+        public void CreateBoundingRectangle(int width, int height, Vector2 offset)
+        {
+            _relativeBoundingRectangle = new Rectangle(0, 0, width +
+            (int)offset.X, height + (int)offset.Y);
+            BoundingRectangle = _relativeBoundingRectangle;
+        }
+        public void CreateBoundingRectangle(int width, int height)
+        {
+            CreateBoundingRectangle(width, height, Vector2.Zero);
+        }
+        public bool TestCollision(GObject2D gameObj)
+        {
+            if (!gameObj.BoundingRectangle.HasValue) return false;
+            if (BoundingRectangle.HasValue && BoundingRectangle.Value.Intersects(gameObj.BoundingRectangle.Value))
+                return true;
+            return false;
+        }
     }
 }

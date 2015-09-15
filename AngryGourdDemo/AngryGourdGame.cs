@@ -6,6 +6,7 @@ using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Input.Touch;
 using Windows.Devices.Sensors;
+using Microsoft.Xna.Framework.Media;
 
 namespace AngryGourdDemo
 {
@@ -26,6 +27,8 @@ namespace AngryGourdDemo
         Hero _hero;
         Gourd _gourd;
         Rock _rock;
+        Explosion _explosion;
+
         RenderContainer _renderContainer;
         public AngryGourdGame()
         {
@@ -45,7 +48,7 @@ namespace AngryGourdDemo
             // TODO: Add your initialization logic here
             _renderContainer = new RenderContainer();
 
-            _background = new GSprite("Backgrounds/Background1") { Position = new Vector2(0,0) };
+            _background = new GSprite("Backgrounds/Background1") { Position = new Vector2(0, 0) };
 
             _gourd = new Gourd();
             _gourd.Initialize();
@@ -55,6 +58,9 @@ namespace AngryGourdDemo
 
             _rock = new Rock();
             _rock.Position = new Vector2(50, 80);
+
+            _explosion = new Explosion();
+            _explosion.Initialize();
 
             var _accelerometer = Accelerometer.GetDefault();
             if (_accelerometer != null)
@@ -95,11 +101,19 @@ namespace AngryGourdDemo
             _background.LoadContent(this.Content);
             _gourd.LoadContent(this.Content);
             _hero.LoadContent(this.Content);
+            _explosion.LoadContent(this.Content);
 
             //Work out how much we need to scale our graphics to fill the screen
             _renderContainer.ResetScaling(baseScreenSize, new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight)); // you also can use the second constructor overloading instead of the method ResetScaling
             Vector3 screenScalingFactor = new Vector3(_renderContainer.HorScaling, _renderContainer.VerScaling, 1);
             globalTransformation = Matrix.CreateScale(screenScalingFactor);
+
+            try
+            {
+                MediaPlayer.IsRepeating = true;
+                MediaPlayer.Play(Content.Load<Song>("Sounds/Music"));
+            }
+            catch { }
         }
 
         /// <summary>
@@ -111,6 +125,7 @@ namespace AngryGourdDemo
             // TODO: Unload any non ContentManager content here
         }
 
+        int collisionCounter = 0;
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -129,7 +144,7 @@ namespace AngryGourdDemo
             while (TouchPanel.IsGestureAvailable)
             {
                 GestureSample gs = TouchPanel.ReadGesture();
-                if(gs.GestureType == GestureType.DoubleTap)
+                if (gs.GestureType == GestureType.DoubleTap)
                 {
                     // flip hero direction
                     _hero.FlipDirection();
@@ -141,6 +156,26 @@ namespace AngryGourdDemo
             _gourd.Position = new Vector2(_hero.Position.X, _gourd.Position.Y);
             _gourd.Update(_renderContainer);
 
+            _explosion.Update(_renderContainer);
+
+            collisionCounter = 0;
+            foreach (Rock r in _gourd.ThrownRocks)
+            {
+                Debug.WriteLine("Collision detected: {0}", _hero.TestCollision(r));
+                if (_hero.BoundingRectangle.HasValue)
+                    Debug.WriteLine("+ Hero Rectangle: X={0} , Y={1} , Width={2} , Height={3}", _hero.BoundingRectangle.Value.X, _hero.BoundingRectangle.Value.Y, _hero.BoundingRectangle.Value.Width, _hero.BoundingRectangle.Value.Height);
+                if (r.BoundingRectangle.HasValue)
+                    Debug.WriteLine("- Rock {4} Rectangle: X={0} , Y={1} , Width={2} , Height={3}", r.BoundingRectangle.Value.X, r.BoundingRectangle.Value.Y, r.BoundingRectangle.Value.Width, r.BoundingRectangle.Value.Height, ++collisionCounter);
+                if (_hero.BoundingRectangle.HasValue && r.BoundingRectangle.HasValue)
+                {
+                    Debug.WriteLine("==> Intersets: {0}", _hero.BoundingRectangle.Value.Intersects(r.BoundingRectangle.Value));
+                    if(_hero.BoundingRectangle.Value.Intersects(r.BoundingRectangle.Value))
+                         _hero.TestCollision(r);
+                }
+            }
+            //if (_hero.TestCollision(r))
+            //    Debug.WriteLine("Collison number {0} detected!", collisionCounter++);
+
             base.Update(gameTime);
         }
 
@@ -151,18 +186,19 @@ namespace AngryGourdDemo
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.White);
-            Debug.WriteLine(gameTime.IsRunningSlowly);
+            //Debug.WriteLine(gameTime.IsRunningSlowly);
 
             //// Let's suppose our screen size is a fixed size 800 * 480, later on we will handle it to work with any screen size
             //spriteBatch.Begin();
-            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, globalTransformation);            
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, globalTransformation);
 
             // TODO: Add your drawing code here
             _background.Draw(_renderContainer);
             _gourd.Draw(_renderContainer);
             _hero.Draw(_renderContainer);
+            _explosion.Draw(_renderContainer);
             spriteBatch.End();
-            
+
             base.Draw(gameTime);
         }
     }

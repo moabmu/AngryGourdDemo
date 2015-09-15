@@ -40,7 +40,7 @@ namespace AngryGourdDemo
             _gourdSprite.Position = this.Position;
 
             _timeCounter += renderContainer.GameTime.ElapsedGameTime.TotalSeconds;
-            Debug.WriteLine(_timeCounter);
+            //Debug.WriteLine(_timeCounter);
             if (_timeCounter >= _timeInterval)
             {
                 _timeCounter = 0;
@@ -55,16 +55,16 @@ namespace AngryGourdDemo
             foreach (Rock r in ThrownRocks)
                 r.Update(renderContainer);
 
-            Debug.WriteLine("- Rocks count before remove: {0}", ThrownRocks.Count);
-            //ThrownRocks.RemoveAll(p => p.Position.Y >= renderContainer.BaseScreenHeight);
-            Debug.WriteLine("# Rocks count after remove: {0}", ThrownRocks.Count);
+            //Debug.WriteLine("- Rocks count before remove: {0}", ThrownRocks.Count);
+            ThrownRocks.RemoveAll(p => p.Position.Y >= renderContainer.BaseScreenHeight);
+            //Debug.WriteLine("# Rocks count after remove: {0}", ThrownRocks.Count);
         }
 
         public override void Draw(RenderContainer renderContainer)
         {
             foreach (Rock r in ThrownRocks)
             {
-                Debug.WriteLine(r.Position.X + ", " + r.Position.Y);
+                //Debug.WriteLine(r.Position.X + ", " + r.Position.Y);
                 r.Draw(renderContainer);
             }
             _gourdSprite.Draw(renderContainer);

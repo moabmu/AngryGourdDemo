@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Content;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Graphics;
+using AngryGourdDemo;
 
 namespace AngryGourdDemo
 {
@@ -26,16 +27,16 @@ namespace AngryGourdDemo
             var pos = this.Position;
             pos.Y += (float)(moveSpeed * renderContainer.GameTime.ElapsedGameTime.TotalSeconds);
             this.Position = pos;
-
-            Unique[] Attendances = new Unique[10];
-
-            foreach (Unique guest in Attendances)
-                greetings("Welcome to Microsoft Club's event {0}", guest.FirstName );
+            if (BoundingRectangle.HasValue)
+            {
+                BoundingRectangle.Value.Update(pos);
+                //Debug.WriteLine("+ ROCK BoundingRectangle: X = {0}, Y = {1}", BoundingRectangle.Value.X, BoundingRectangle.Value.Y);
+            }
         }
-
-        void greetings(string s, params object[] a ) { }
-        class Unique {
-            public string FirstName;
+        public override void Initialize()
+        {
+            base.Initialize();
+            this.CreateBoundingRectangle(80,66);
         }
     }
 }

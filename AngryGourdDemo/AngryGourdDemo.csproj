@@ -89,6 +89,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="AngryGourdGame.cs" />
+    <Compile Include="Explosion.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
