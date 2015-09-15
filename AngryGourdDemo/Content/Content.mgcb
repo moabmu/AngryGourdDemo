@@ -153,3 +153,14 @@
 /processorParam:TextureFormat=Color
 /build:Overlays/You_Win.png
 
+#begin Sprites/Explosion_Large_Spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Explosion_Large_Spritesheet.png
+

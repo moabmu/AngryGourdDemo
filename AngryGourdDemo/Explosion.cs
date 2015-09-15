@@ -10,38 +10,18 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace AngryGourdDemo
 {
-    public class Explosion : GObject2D
+    public class Explosion : GAnimatedSprite
     {
-        private GAnimatedSprite _explosionSprite;
-        private const int FrameWidth = 105;
+        private const int FrameWidth = 210;
 
-        public new Vector2 Position
-        {
-            get { return _explosionSprite.Position; }
-            set { _explosionSprite.Position = value; }
-        }
+        public Explosion():base("Sprites/Explosion_Large_Spritesheet", 16, 75, new Point(FrameWidth, FrameWidth), 4)
+        { }
 
         public override void Initialize()
         {
-            _explosionSprite = new GAnimatedSprite("Sprites/Explosion_Spritesheet", 16, 75, new Point(FrameWidth, 105),4);
-            _explosionSprite.Position = new Vector2(25, 384);
-            _explosionSprite.PlayAnimation(true);
-            _explosionSprite.CreateBoundingRectangle(FrameWidth, FrameWidth);
-            BoundingRectangle = _explosionSprite.BoundingRectangle.Value;
-        }
-
-        public override void LoadContent(ContentManager contentManager)
-        {
-            _explosionSprite.LoadContent(contentManager);
-        }
-        public override void Update(RenderContainer renderContainer)
-        {
-            _explosionSprite.Update(renderContainer);
-        }
-
-        public override void Draw(RenderContainer renderContainer)
-        {
-            _explosionSprite.Draw(renderContainer);
+            Position = new Vector2(25, 330);
+            //PlayAnimation(false);
+            CreateBoundingRectangle(FrameWidth, FrameWidth);
         }
     }
 }

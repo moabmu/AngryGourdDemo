@@ -74,7 +74,8 @@ namespace AngryGourdDemo
 
         public override void Draw(RenderContainer renderContainer)
         {
-            _heroSprite.Draw(renderContainer);
+            if (CanDraw)
+                _heroSprite.Draw(renderContainer);
         }
 
         public void FlipDirection()

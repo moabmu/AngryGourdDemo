@@ -161,16 +161,13 @@ namespace AngryGourdDemo
             collisionCounter = 0;
             foreach (Rock r in _gourd.ThrownRocks)
             {
-                Debug.WriteLine("Collision detected: {0}", _hero.TestCollision(r));
-                if (_hero.BoundingRectangle.HasValue)
-                    Debug.WriteLine("+ Hero Rectangle: X={0} , Y={1} , Width={2} , Height={3}", _hero.BoundingRectangle.Value.X, _hero.BoundingRectangle.Value.Y, _hero.BoundingRectangle.Value.Width, _hero.BoundingRectangle.Value.Height);
-                if (r.BoundingRectangle.HasValue)
-                    Debug.WriteLine("- Rock {4} Rectangle: X={0} , Y={1} , Width={2} , Height={3}", r.BoundingRectangle.Value.X, r.BoundingRectangle.Value.Y, r.BoundingRectangle.Value.Width, r.BoundingRectangle.Value.Height, ++collisionCounter);
-                if (_hero.BoundingRectangle.HasValue && r.BoundingRectangle.HasValue)
+                if(_hero.TestCollision(r))
                 {
-                    Debug.WriteLine("==> Intersets: {0}", _hero.BoundingRectangle.Value.Intersects(r.BoundingRectangle.Value));
-                    if(_hero.BoundingRectangle.Value.Intersects(r.BoundingRectangle.Value))
-                         _hero.TestCollision(r);
+                    _explosion.Position = new Vector2(r.Position.X - 100, _explosion.Position.Y);
+                    _explosion.CanDraw = true;
+                    _explosion.PlayAnimation(false);
+                    _hero.CanDraw = false;
+                    r.CanDraw = false;
                 }
             }
             //if (_hero.TestCollision(r))
